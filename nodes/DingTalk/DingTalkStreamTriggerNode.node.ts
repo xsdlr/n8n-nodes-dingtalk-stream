@@ -32,7 +32,7 @@ export class DingTalkStreamTriggerNode implements INodeType {
 				type: 'boolean',
 				default: true,
 				placeholder: '',
-				description: '是否自动响应（避免服务端重试）',
+				description: 'Whether to automatically respond (to avoid server-side retries)',
 			},
 		],
 		credentials: [

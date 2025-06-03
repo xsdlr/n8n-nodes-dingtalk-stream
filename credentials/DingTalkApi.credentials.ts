@@ -5,7 +5,8 @@ import {
 
 export class DingTalkApi implements ICredentialType {
 	name = 'dingTalkApi';
-	displayName = 'DingTalk Api';
+	displayName = 'DingTalk API';
+	documentationUrl = 'https://github.com/xsdlr/n8n-nodes-dingtalk-stream';
 
 	properties: INodeProperties[] = [
 		{

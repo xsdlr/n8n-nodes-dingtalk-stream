@@ -43,7 +43,7 @@ export class DingTalkReplayNode implements INodeType {
 		outputs: [NodeConnectionType.Main],
 		properties: [
 			{
-				displayName: 'webhook',
+				displayName: 'Webhook',
 				name: 'webhook',
 				type: 'string',
 				default: '',
@@ -55,6 +55,7 @@ export class DingTalkReplayNode implements INodeType {
 				displayName: 'accessToken',
 				name: 'accessToken',
 				type: 'string',
+				typeOptions: { password: true },
 				default: '',
 				required: true,
 				placeholder: '',
@@ -73,7 +74,7 @@ export class DingTalkReplayNode implements INodeType {
 				name: 'jsonData',
 				type: 'json',
 				default: {},
-				required: false,
+				required: true,
 				displayOptions: {
 					show: {
 						enableJsonMode: [true],

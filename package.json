@@ -1,7 +1,7 @@
 {
   "name": "n8n-nodes-dingtalk-stream",
   "version": "0.1.0",
-  "description": "",
+  "description": "n8n-nodes-dingtalk-stream",
   "keywords": [
     "n8n-community-node-package"
   ],
@@ -25,7 +25,7 @@
     "format": "prettier nodes credentials --write",
     "lint": "eslint nodes credentials package.json",
     "lintfix": "eslint nodes credentials package.json --fix",
-    "prepublishOnly": "npm build && npm lint -c .eslintrc.prepublish.js nodes credentials package.json"
+    "prepublishOnly": "npm run build && npm run lint -c .eslintrc.prepublish.js nodes credentials package.json"
   },
   "files": [
     "dist"
@@ -36,8 +36,8 @@
       "dist/credentials/DingTalkApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/DingTalkNode/DingTalkStreamTriggerNode.node.js",
-      "dist/nodes/DingTalkNode/DingTalkReplayNode.node.js"
+      "dist/nodes/DingTalk/DingTalkStreamTriggerNode.node.js",
+      "dist/nodes/DingTalk/DingTalkReplayNode.node.js"
     ]
   },
   "devDependencies": {
