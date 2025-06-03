@@ -1,5 +1,5 @@
 {
-  "name": "n8n-nodes-<...>",
+  "name": "n8n-nodes-dingtalk-stream",
   "version": "0.1.0",
   "description": "",
   "keywords": [
@@ -8,12 +8,12 @@
   "license": "MIT",
   "homepage": "",
   "author": {
-    "name": "",
-    "email": ""
+    "name": "xsdlr",
+    "email": "xsdlr123@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/<...>/n8n-nodes-<...>.git"
+    "url": "https://github.com/xsdlr/n8n-nodes-dingtalk-stream.git"
   },
   "engines": {
     "node": ">=20.15"
@@ -33,12 +33,11 @@
   "n8n": {
     "n8nNodesApiVersion": 1,
     "credentials": [
-      "dist/credentials/ExampleCredentialsApi.credentials.js",
-      "dist/credentials/HttpBinApi.credentials.js"
+      "dist/credentials/DingTalkApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/ExampleNode/ExampleNode.node.js",
-      "dist/nodes/HttpBin/HttpBin.node.js"
+      "dist/nodes/DingTalkNode/DingTalkStreamTriggerNode.node.js",
+      "dist/nodes/DingTalkNode/DingTalkReplayNode.node.js"
     ]
   },
   "devDependencies": {
@@ -51,5 +50,8 @@
   },
   "peerDependencies": {
     "n8n-workflow": "*"
+  },
+  "dependencies": {
+    "dingtalk-stream": "^2.1.4"
   }
 }
