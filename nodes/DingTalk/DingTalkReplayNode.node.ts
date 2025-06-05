@@ -6,6 +6,7 @@ import type {
 	NodeExecutionWithMetadata,
 } from 'n8n-workflow';
 import { NodeConnectionType, NodeOperationError } from 'n8n-workflow';
+import crypto from 'crypto';
 
 interface MessageResponse {
 	at: {
@@ -28,6 +29,13 @@ const MSG_TYPE = {
 	MARKDOWN: 'markdown',
 } as const;
 
+const RobotType = {
+	// 自定义
+	CUSTOM: 'custom',
+	// 企业
+	COMPANY: 'company',
+} as const;
+
 export class DingTalkReplayNode implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'DingTalkReplayNode',
@@ -42,6 +50,29 @@ export class DingTalkReplayNode implements INodeType {
 		inputs: [NodeConnectionType.Main],
 		outputs: [NodeConnectionType.Main],
 		properties: [
+			// eslint-disable-next-line n8n-nodes-base/node-param-default-missing
+			{
+				displayName: '类型',
+				name: 'type',
+				type: 'options',
+				required: true,
+				noDataExpression: true,
+				// default: '',
+				default: RobotType.CUSTOM,
+				options: [
+					{
+						name: '自定义机器人',
+						value: RobotType.CUSTOM,
+						description: '自定义机器人存在限流, 每分钟20次',
+						action: '自定义机器人',
+					},
+					{
+						name: '企业内部机器人',
+						value: RobotType.COMPANY,
+						action: '企业内部机器人',
+					},
+				],
+			},
 			{
 				displayName: 'Webhook',
 				name: 'webhook',
@@ -52,14 +83,32 @@ export class DingTalkReplayNode implements INodeType {
 				description: '钉钉机器人webhook',
 			},
 			{
-				displayName: 'accessToken',
+				displayName: 'AccessToken',
 				name: 'accessToken',
 				type: 'string',
 				typeOptions: { password: true },
 				default: '',
-				required: true,
 				placeholder: '',
 				description: '钉钉机器人accessToken',
+				displayOptions: {
+					show: {
+						type: [RobotType.COMPANY],
+					},
+				},
+			},
+			{
+				displayName: 'Sign',
+				name: 'sign',
+				type: 'string',
+				typeOptions: { password: true },
+				default: '',
+				placeholder: '',
+				description: '钉钉机器人sign',
+				displayOptions: {
+					show: {
+						type: [RobotType.CUSTOM],
+					},
+				},
 			},
 			{
 				displayName: '是否使用JSON格式数据模式',
@@ -185,9 +234,22 @@ export class DingTalkReplayNode implements INodeType {
 	async execute(
 		this: IExecuteFunctions,
 	): Promise<INodeExecutionData[][] | NodeExecutionWithMetadata[][] | null> {
-		const webhook = this.getNodeParameter('webhook', 0) as string;
-		const accessToken = this.getNodeParameter('accessToken', 0) as string;
+		let webhook = this.getNodeParameter('webhook', 0) as string;
+		const type = this.getNodeParameter('type', 0) as string;
+		const accessToken =
+			type === RobotType.COMPANY ? (this.getNodeParameter('accessToken', 0) as string) : '';
+		const sign = type === RobotType.CUSTOM ? (this.getNodeParameter('sign', 0) as string) : '';
 		const enableJsonMode = this.getNodeParameter('enableJsonMode', 0) as boolean;
+
+		if (sign) {
+			const timestamp = Date.parse(new Date().toString());
+			const signBase64 = crypto
+				.createHmac('sha256', sign)
+				.update(`${timestamp}\n${sign}`)
+				.digest('base64');
+			const signStr = encodeURIComponent(signBase64);
+			webhook = `${webhook}&timestamp=${timestamp}&sign=${signStr}`;
+		}
 
 		const isAtAll = enableJsonMode ? false : (this.getNodeParameter('isAtAll', 0) as boolean);
 		const atUserIds =
